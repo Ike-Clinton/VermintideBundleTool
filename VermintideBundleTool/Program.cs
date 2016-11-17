@@ -48,7 +48,7 @@ namespace VermintideBundleTool
         }
 
         [Verb("pack", HelpText = "Repack unpacked bundle files from a directory.")]
-        class PackOption
+        class RepackOption
         {
             [Option('i', "input", Required = true,
                 Min = 1,
@@ -65,12 +65,23 @@ namespace VermintideBundleTool
 
         static int Main(string[] args)
         {
-            var errorCode = CommandLine.Parser.Default.ParseArguments<UnpackOption, RenameOption>(args)
+            var errorCode = CommandLine.Parser.Default.ParseArguments<UnpackOption, RenameOption, RepackOption>(args)
                 .MapResult(
                     (UnpackOption opts) => RunUnpackAndReturnExitCode(opts),
                     (RenameOption opts) => RunRenameAndReturnExitCode(opts),
+                    (RepackOption opts) => RunRepackAndReturnExitCode(opts),
                     errs => 1);
             return errorCode;
+        }
+
+        private static int RunRepackFiles(string bundleDirectory, string outputDirectory)
+        {
+            return 0;
+        }
+
+        private static int RunRepackAndReturnExitCode(RepackOption opts)
+        {
+            return 0;
         }
 
         private static int RunUnpackDirectory(string bundleDirectory, string outputDirectory)
