@@ -47,7 +47,13 @@ namespace VermintideBundleTool
             public bool Verbose { get; set; }
         }
 
-        [Verb("pack", HelpText = "Repack unpacked bundle files from a directory.")]
+        /**
+         * Repack Verb
+         * Input: The directory of files which are to be packed specified by the input option
+         * Output: A bundle file at the location specified by the output option
+         * Calls: RunRepackAndReturnExitCode
+         **/
+        [Verb("repack", HelpText = "Repack unpacked bundle files from a directory.")]
         class RepackOption
         {
             [Option('i', "input", Required = true,
@@ -74,11 +80,27 @@ namespace VermintideBundleTool
             return errorCode;
         }
 
+
+
+        /**
+         * RunRepackDirectory()
+         * directory    - The directory of files which are to be packed specified by the input option
+         * outputBundle - A bundle file at the location specified by the output option
+         * Calls: 0
+         **/
         private static int RunRepackDirectory(string directory, string outputBundle)
         {
             return 0;
         }
 
+
+
+        /**
+         * RunRepackAndReturnExitCode()
+         * opts - the Options passed to this function by the verb
+         * Output: A bundle file at the location specified by the output option
+         * Calls: RepackBundleFromFiles(inputFilePath, outPath, nameDictionary, opts.Verbose)
+         **/
         private static int RunRepackAndReturnExitCode(RepackOption opts)
         {
             var nameDictionary = ReadDictionary(DictionaryFilePath);
@@ -111,12 +133,34 @@ namespace VermintideBundleTool
             return 0;
         }
 
-        private static void RepackBundleFromFiles(string inputDirectory, string outPath, Dictionary<ulong, string> fileNames, bool verbose = false)
+
+        /**
+         * RepackBundleFromFiles()
+         * inputDirectory  - The directory containing the files to be packed
+         * outPath         - The path where the bundle file will be created
+         * Output: A bundle file at the location specified by the output option
+         * Calls: new BundleFile()
+         **/
+        private static void RepackBundleFromFiles(string inputDirectory, string outPath, bool verbose = false)
         {
+            using (var input = File.OpenRead(inputDirectory))
+            using (var temporaryFile = File.Create(Path.GetTempFileName(), 4 * 1024, FileOptions.DeleteOnClose))
+            {
+                WriteLine("Writing bundle", verbose);
+                BundleFile file = new BundleFile();
+                //file.Write(inputDirectory, temporaryFile);
+
+                WriteLine(string.Format("Writing {0} files to bundle file", file.Entries.Count), verbose);
+
+                int i = 1;
+                foreach (var entry in file.Entries)
+                {
+                    
+                }
+
+            }
             
         }
-
-        
         private static int RunUnpackAndReturnExitCode(UnpackOption opts)
         {
             var nameDictionary = ReadDictionary(DictionaryFilePath);

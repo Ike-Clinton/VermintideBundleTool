@@ -64,5 +64,28 @@ namespace VermintideBundleTool.Bundle
 
             Entries = entries;
         }
+
+        public void Write(Stream input, Stream temporaryFile)
+        {
+            BinaryWriter writer = new BinaryWriter(temporaryFile);
+
+            uint magic = 0xF0000004;
+            writer.Write(magic);
+
+            int compressedSize = 0;
+            //uint padding = 
+
+            int dstOffset = 0;
+            while (dstOffset < compressedSize)
+            {
+
+            }
+
+        }
+
+        private void WriteEntries(Stream input)
+        {
+
+        }
     }
 }
