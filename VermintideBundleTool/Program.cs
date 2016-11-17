@@ -47,6 +47,22 @@ namespace VermintideBundleTool
             public bool Verbose { get; set; }
         }
 
+        [Verb("pack", HelpText = "Repack unpacked bundle files from a directory.")]
+        class PackOption
+        {
+            [Option('i', "input", Required = true,
+                Min = 1,
+                HelpText = "Input files to be processed.")]
+            public IEnumerable<string> InpurtFiles { get; set; }
+
+            [Option('o', "output",
+                HelpText = "Output directory for repacked bundle file.")]
+            public string OutputDirectory { get; set; }
+
+            [Option(HelpText = "Prints all messages to standard output.")]
+            public bool Verbose { get; set; }
+        }
+
         static int Main(string[] args)
         {
             var errorCode = CommandLine.Parser.Default.ParseArguments<UnpackOption, RenameOption>(args)
