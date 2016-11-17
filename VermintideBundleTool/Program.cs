@@ -53,7 +53,7 @@ namespace VermintideBundleTool
             [Option('i', "input", Required = true,
                 Min = 1,
                 HelpText = "Input files to be processed.")]
-            public IEnumerable<string> InpurtFiles { get; set; }
+            public IEnumerable<string> InputFiles { get; set; }
 
             [Option('o', "output",
                 HelpText = "Output directory for repacked bundle file.")]
@@ -74,14 +74,46 @@ namespace VermintideBundleTool
             return errorCode;
         }
 
-        private static int RunRepackFiles(string bundleDirectory, string outputDirectory)
+        private static int RunRepackDirectory(string directory, string outputBundle)
         {
             return 0;
         }
 
         private static int RunRepackAndReturnExitCode(RepackOption opts)
         {
+            var nameDictionary = ReadDictionary(DictionaryFilePath);
+
+            var inputFilePaths = opts.InputFiles.ToArray();
+            int i = 1;
+            foreach (var inputFilePath in inputFilePaths)
+            {
+                var fileName = Path.GetFileName(inputFilePath);
+                WriteLine(
+                    string.Format("Repacking file {0}/{1} '{2}'", i, inputFilePaths.Length, fileName),
+                    opts.Verbose);
+                string outPath;
+                if (string.IsNullOrEmpty(opts.OutputDirectory))
+                {
+                    outPath = Path.Combine(Path.GetDirectoryName(inputFilePath), fileName + "_out\\");
+                }
+                else
+                {
+                    outPath = Path.Combine(opts.OutputDirectory, fileName);
+                }
+
+                RepackBundleFromFiles(inputFilePath, outPath, nameDictionary, opts.Verbose);
+
+                WriteLine(
+                    string.Format("Repacked file '{0}'", fileName),
+                    opts.Verbose);
+                i++;
+            }
             return 0;
+        }
+
+        private static void RepackBundleFromFiles(string inputDirectory, string outPath, Dictionary<ulong, string> fileNames, bool verbose = false)
+        {
+            
         }
 
         private static int RunUnpackDirectory(string bundleDirectory, string outputDirectory)
