@@ -116,35 +116,7 @@ namespace VermintideBundleTool
             
         }
 
-        private static int RunUnpackDirectory(string bundleDirectory, string outputDirectory)
-        {
-            var files = Directory.GetFiles(
-                bundleDirectory, "*",
-                SearchOption.AllDirectories)
-                .GroupBy(Path.GetExtension)
-                .Where(g => g.Key == "" || g.Key == ".patch_0")
-                .OrderBy(f => f.Key)
-                .SelectMany(f => f)
-                .ToList();
-            foreach (var file in files)
-            {
-                try
-                {
-                    RunUnpackAndReturnExitCode(new UnpackOption
-                    {
-                        InputFiles = new string[] {file},
-                        OutputDirectory = outputDirectory,
-                        Verbose = false
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error unpacking '{0}': {1}", file, ex);
-                }
-            }
-            return 0;
-        }
-
+        
         private static int RunUnpackAndReturnExitCode(UnpackOption opts)
         {
             var nameDictionary = ReadDictionary(DictionaryFilePath);
@@ -340,6 +312,35 @@ namespace VermintideBundleTool
                 var database = new BundleDatabaseFile();
                 database.Read(input);
             }
+        }
+
+        private static int RunUnpackDirectory(string bundleDirectory, string outputDirectory)
+        {
+            var files = Directory.GetFiles(
+                bundleDirectory, "*",
+                SearchOption.AllDirectories)
+                .GroupBy(Path.GetExtension)
+                .Where(g => g.Key == "" || g.Key == ".patch_0")
+                .OrderBy(f => f.Key)
+                .SelectMany(f => f)
+                .ToList();
+            foreach (var file in files)
+            {
+                try
+                {
+                    RunUnpackAndReturnExitCode(new UnpackOption
+                    {
+                        InputFiles = new string[] { file },
+                        OutputDirectory = outputDirectory,
+                        Verbose = false
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error unpacking '{0}': {1}", file, ex);
+                }
+            }
+            return 0;
         }
     }
 }
